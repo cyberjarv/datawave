@@ -156,5 +156,4 @@ public class QueryParameters {
     public static final String RAW_TYPES = "raw.types";
     
     public static final String DATE_INDEX_TIME_TRAVEL = "date.index.time.travel";
-    
 }
