@@ -23,19 +23,19 @@ import static datawave.query.testframework.RawDataManager.EQ_OP;
 import static datawave.query.testframework.RawDataManager.RE_OP;
 
 public class LuceneQueryPlannerTest extends AbstractFunctionalQuery {
-
+    
     private static final Logger log = Logger.getLogger(LuceneQueryPlannerTest.class);
-
+    
     @BeforeClass
     public static void filterSetup() throws Exception {
         Collection<DataTypeHadoopConfig> dataTypes = new ArrayList<>();
         FieldConfig generic = new GenericCityFields();
         dataTypes.add(new CitiesDataType(CityEntry.generic, generic));
-
+        
         final AccumuloSetupHelper helper = new AccumuloSetupHelper(dataTypes);
         connector = helper.loadTables(log);
     }
-
+    
     public LuceneQueryPlannerTest() {
         super(CitiesDataType.getManager());
     }
@@ -69,7 +69,8 @@ public class LuceneQueryPlannerTest extends AbstractFunctionalQuery {
         String state = "lazio";
         String phrase = RE_OP + "'" + state + "'";
         String query = CityField.CONTINENT.name() + ":\"" + code + "\"" + AND_OP + "#INCLUDE(" + Constants.ANY_FIELD + "," + state + ")";
-        String expect = CityField.CONTINENT.name() + EQ_OP + "'" + code + "' && (filter:includeRegex(" + Constants.ANY_FIELD + ", '" + state + "'))";;
+        String expect = CityField.CONTINENT.name() + EQ_OP + "'" + code + "' && (filter:includeRegex(" + Constants.ANY_FIELD + ", '" + state + "'))";
+        ;
         String plan = getPlan(query, true, true);
         Assert.assertEquals(expect, plan);
     }
@@ -94,7 +95,8 @@ public class LuceneQueryPlannerTest extends AbstractFunctionalQuery {
         String phrase = RE_OP + "'" + state + "'";
         String query = CityField.CONTINENT.name() + ":\"" + cont + "\"" + AND_OP + CityField.CITY.name() + ":*" + AND_OP + "#INCLUDE(" + Constants.ANY_FIELD
                         + "," + state + ")";
-        String expect = CityField.CONTINENT.name() + EQ_OP + "'" + cont + "' && !(" + CityField.CITY.name() + EQ_OP + "null) && (filter:includeRegex(" + Constants.ANY_FIELD + ", '" + state + "'))";
+        String expect = CityField.CONTINENT.name() + EQ_OP + "'" + cont + "' && !(" + CityField.CITY.name() + EQ_OP + "null) && (filter:includeRegex("
+                        + Constants.ANY_FIELD + ", '" + state + "'))";
         String plan = getPlan(query, true, true);
         Assert.assertEquals(expect, plan);
     }

@@ -393,12 +393,12 @@ public class DefaultQueryPlanner extends QueryPlanner {
         }
         
         final QueryStopwatch timers = config.getTimers();
-        
+        System.out.println(PrintingVisitor.formattedQueryString(queryTree));
         Tuple2<CloseableIterable<QueryPlan>,Boolean> queryRanges = getQueryRanges(scannerFactory, metadataHelper, config, queryTree);
-        
+
         // a full table scan is required if
         final boolean isFullTable = queryRanges.second();
-        
+
         // abort if we cannot handle full table scans
         if (isFullTable && !config.getFullTableScanEnabled()) {
             PreConditionFailedQueryException qe = new PreConditionFailedQueryException(DatawaveErrorCode.FULL_TABLE_SCAN_REQUIRED_BUT_DISABLED);
@@ -878,7 +878,8 @@ public class DefaultQueryPlanner extends QueryPlanner {
             try {
                 
                 expansionFields = metadataHelper.getExpansionFields(config.getDatatypeFilter());
-                queryTree = FixUnfieldedTermsVisitor.fixUnfieldedTree(config, scannerFactory, metadataHelper, queryTree, expansionFields, config.isExpandFields(), config.isExpandValues());
+                queryTree = FixUnfieldedTermsVisitor.fixUnfieldedTree(config, scannerFactory, metadataHelper, queryTree, expansionFields,
+                                config.isExpandFields(), config.isExpandValues());
             } catch (EmptyUnfieldedTermExpansionException e) {
                 // The visitor will only throw this if we cannot expand anything resulting in empty query
                 stopwatch.stop();
@@ -1094,10 +1095,10 @@ public class DefaultQueryPlanner extends QueryPlanner {
             // Expand any bounded ranges into a conjunction of discrete terms
             try {
                 ParallelIndexExpansion regexExpansion = new ParallelIndexExpansion(config, scannerFactory, metadataHelper, expansionFields,
-                        config.isExpandFields(), config.isExpandValues());
+                                config.isExpandFields(), config.isExpandValues());
                 queryTree = (ASTJexlScript) regexExpansion.visit(queryTree, null);
-                queryTree = RangeConjunctionRebuildingVisitor.expandRanges(config, scannerFactory, metadataHelper, queryTree,
-                        config.isExpandFields(), config.isExpandValues());
+                queryTree = RangeConjunctionRebuildingVisitor.expandRanges(config, scannerFactory, metadataHelper, queryTree, config.isExpandFields(),
+                                config.isExpandValues());
                 queryTree = PushFunctionsIntoExceededValueRanges.pushFunctions(queryTree, metadataHelper, config.getDatatypeFilter());
                 if (log.isDebugEnabled()) {
                     logQuery(queryTree, "Query after expanding regex:");
@@ -1127,8 +1128,8 @@ public class DefaultQueryPlanner extends QueryPlanner {
                     config.setExpandAllTerms(true);
                     
                     queryTree = (ASTJexlScript) regexExpansion.visit(queryTree, null);
-                    queryTree = RangeConjunctionRebuildingVisitor.expandRanges(config, scannerFactory, metadataHelper, queryTree,
-                            config.isExpandFields(), config.isExpandValues());
+                    queryTree = RangeConjunctionRebuildingVisitor.expandRanges(config, scannerFactory, metadataHelper, queryTree, config.isExpandFields(),
+                                    config.isExpandValues());
                     queryTree = PushFunctionsIntoExceededValueRanges.pushFunctions(queryTree, metadataHelper, config.getDatatypeFilter());
                     config.setExpandAllTerms(expandAllTerms);
                     if (log.isDebugEnabled()) {

@@ -84,19 +84,18 @@ public class ParallelIndexExpansion extends RebuildingVisitor {
     private static final Logger log = Logger.getLogger(ParallelIndexExpansion.class);
     
     public ParallelIndexExpansion(ShardQueryConfiguration config, ScannerFactory scannerFactory, MetadataHelper helper, Set<String> expansionFields,
-                                  boolean expandFields, boolean expandValues)
-                    throws InstantiationException, IllegalAccessException, TableNotFoundException {
+                    boolean expandFields, boolean expandValues) throws InstantiationException, IllegalAccessException, TableNotFoundException {
         this(config, scannerFactory, helper, expansionFields, expandFields, expandValues, "Datawave Fielded Regex");
     }
     
     public ParallelIndexExpansion(ShardQueryConfiguration config, ScannerFactory scannerFactory, MetadataHelper helper, Set<String> expansionFields,
-                    boolean expandFields, boolean expandValues,
-                    String threadName) throws InstantiationException, IllegalAccessException, TableNotFoundException {
+                    boolean expandFields, boolean expandValues, String threadName) throws InstantiationException, IllegalAccessException,
+                    TableNotFoundException {
         this.allFields = helper.getAllFields(config.getDatatypeFilter());
         this.config = config;
         this.scannerFactory = scannerFactory;
         this.threadName = threadName;
-
+        
         this.expandFields = expandFields;
         this.expandValues = expandValues;
         this.indexOnlyFields = helper.getIndexOnlyFields(config.getDatatypeFilter());

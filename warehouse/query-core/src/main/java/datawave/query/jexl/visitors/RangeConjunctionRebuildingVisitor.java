@@ -68,9 +68,8 @@ public class RangeConjunctionRebuildingVisitor extends RebuildingVisitor {
     protected boolean expandFields;
     protected boolean expandValues;
     
-    public RangeConjunctionRebuildingVisitor(ShardQueryConfiguration config, ScannerFactory scannerFactory, MetadataHelper helper,
-                                             boolean expandFields, boolean expandValues)
-                    throws TableNotFoundException, ExecutionException {
+    public RangeConjunctionRebuildingVisitor(ShardQueryConfiguration config, ScannerFactory scannerFactory, MetadataHelper helper, boolean expandFields,
+                    boolean expandValues) throws TableNotFoundException, ExecutionException {
         this.config = config;
         this.helper = helper;
         this.indexOnlyFields = helper.getIndexOnlyFields(config.getDatatypeFilter());
@@ -95,17 +94,16 @@ public class RangeConjunctionRebuildingVisitor extends RebuildingVisitor {
      */
     @SuppressWarnings("unchecked")
     public static <T extends JexlNode> T expandRanges(ShardQueryConfiguration config, ScannerFactory scannerFactory, MetadataHelper helper, T script,
-                                                      boolean expandFields, boolean expandValues)
-                    throws TableNotFoundException, ExecutionException {
+                    boolean expandFields, boolean expandValues) throws TableNotFoundException, ExecutionException {
         // if not expanding fields or values, then this is a noop
         if (expandFields || expandValues) {
             RangeConjunctionRebuildingVisitor visitor = new RangeConjunctionRebuildingVisitor(config, scannerFactory, helper, expandFields, expandValues);
-
+            
             if (null == visitor.config.getQueryFieldsDatatypes()) {
                 QueryException qe = new QueryException(DatawaveErrorCode.DATATYPESFORINDEXFIELDS_MULTIMAP_MISSING);
                 throw new DatawaveFatalQueryException(qe);
             }
-
+            
             return (T) (script.jjtAccept(visitor, null));
         } else {
             return script;

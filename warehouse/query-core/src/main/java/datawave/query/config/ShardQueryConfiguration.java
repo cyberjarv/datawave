@@ -972,16 +972,15 @@ public class ShardQueryConfiguration extends GenericQueryConfiguration implement
     public void setMaxDepthThreshold(int maxDepthThreshold) {
         this.maxDepthThreshold = maxDepthThreshold;
     }
-
-
+    
     public boolean isExpandFields() {
         return expandFields;
     }
-
+    
     public void setExpandFields(boolean expandFields) {
         this.expandFields = expandFields;
     }
-
+    
     public int getMaxUnfieldedExpansionThreshold() {
         return maxUnfieldedExpansionThreshold;
     }
@@ -989,15 +988,15 @@ public class ShardQueryConfiguration extends GenericQueryConfiguration implement
     public void setMaxUnfieldedExpansionThreshold(int maxUnfieldedExpansionThreshold) {
         this.maxUnfieldedExpansionThreshold = maxUnfieldedExpansionThreshold;
     }
-
+    
     public boolean isExpandValues() {
         return expandValues;
     }
-
+    
     public void setExpandValues(boolean expandValues) {
         this.expandValues = expandValues;
     }
-
+    
     public int getMaxValueExpansionThreshold() {
         return maxValueExpansionThreshold;
     }

@@ -178,13 +178,13 @@ import static datawave.webservice.query.cache.QueryTraceCache.PatternWrapper;
 public class QueryExecutorBean implements QueryExecutor {
     
     private static final String PRIVILEGED_USER = "PrivilegedUser";
-
+    
     /**
      * Used when getting a plan prior to creating a query
      */
     public static final String EXPAND_VALUES = "expand.values";
     public static final String EXPAND_FIELDS = "expand.fields";
-
+    
     private final Logger log = Logger.getLogger(QueryExecutorBean.class);
     
     @Inject
@@ -800,8 +800,7 @@ public class QueryExecutorBean implements QueryExecutor {
     @Path("/{logicName}/plan")
     @Interceptors({RequiredInterceptor.class, ResponseInterceptor.class})
     @Timed(name = "dw.query.planQuery", absolute = true)
-    public GenericResponse<String> planQuery(@Required("logicName") @PathParam("logicName") String queryLogicName,
-                    MultivaluedMap<String,String> queryParameters) {
+    public GenericResponse<String> planQuery(@Required("logicName") @PathParam("logicName") String queryLogicName, MultivaluedMap<String,String> queryParameters) {
         QueryData qd = validateQuery(queryLogicName, queryParameters, null);
         
         GenericResponse<String> response = new GenericResponse<>();
@@ -812,7 +811,7 @@ public class QueryExecutorBean implements QueryExecutor {
         try {
             // Default hasResults to true.
             response.setHasResults(true);
-
+            
             // by default we will expand the fields but not the values.
             boolean expandFields = true;
             boolean expandValues = false;
@@ -822,7 +821,7 @@ public class QueryExecutorBean implements QueryExecutor {
             if (queryParameters.containsKey(EXPAND_VALUES)) {
                 expandValues = Boolean.valueOf(queryParameters.getFirst(EXPAND_VALUES));
             }
-
+            
             AuditType auditType = qd.logic.getAuditType(null);
             try {
                 MultivaluedMap<String,String> optionalQueryParameters = qp.getUnknownParameters(queryParameters);

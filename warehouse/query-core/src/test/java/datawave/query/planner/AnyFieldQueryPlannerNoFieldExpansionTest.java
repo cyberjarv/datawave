@@ -26,9 +26,9 @@ import static datawave.query.testframework.RawDataManager.RE_OP;
 import static datawave.query.testframework.RawDataManager.RN_OP;
 
 public class AnyFieldQueryPlannerNoFieldExpansionTest extends AbstractFunctionalQuery {
-
+    
     private static final Logger log = Logger.getLogger(AnyFieldQueryPlannerNoFieldExpansionTest.class);
-
+    
     @BeforeClass
     public static void filterSetup() throws Exception {
         Collection<DataTypeHadoopConfig> dataTypes = new ArrayList<>();
@@ -36,11 +36,11 @@ public class AnyFieldQueryPlannerNoFieldExpansionTest extends AbstractFunctional
         generic.addReverseIndexField(CityField.STATE.name());
         generic.addReverseIndexField(CityField.CONTINENT.name());
         dataTypes.add(new CitiesDataType(CityEntry.generic, generic));
-
+        
         final AccumuloSetupHelper helper = new AccumuloSetupHelper(dataTypes);
         connector = helper.loadTables(log);
     }
-
+    
     public AnyFieldQueryPlannerNoFieldExpansionTest() {
         super(CitiesDataType.getManager());
     }
@@ -70,7 +70,7 @@ public class AnyFieldQueryPlannerNoFieldExpansionTest extends AbstractFunctional
             } catch (FullTableScansDisallowedException e) {
                 // expected
             }
-
+            
             this.logic.setFullTableScanEnabled(true);
             try {
                 String plan = getPlan(query, false, true);
@@ -135,7 +135,8 @@ public class AnyFieldQueryPlannerNoFieldExpansionTest extends AbstractFunctional
             String statePhrase = EQ_OP + "'" + state + "'";
             String contPhrase = EQ_OP + "'" + cont + "'";
             String query = Constants.ANY_FIELD + cityPhrase + OR_OP + Constants.ANY_FIELD + statePhrase + AND_OP + Constants.ANY_FIELD + contPhrase;
-            String anyQuery = Constants.ANY_FIELD + cityPhrase.toLowerCase() + " || (" + Constants.ANY_FIELD + statePhrase.toLowerCase() + " && " + Constants.ANY_FIELD + contPhrase.toLowerCase() + ")";
+            String anyQuery = Constants.ANY_FIELD + cityPhrase.toLowerCase() + " || (" + Constants.ANY_FIELD + statePhrase.toLowerCase() + " && "
+                            + Constants.ANY_FIELD + contPhrase.toLowerCase() + ")";
             String plan = getPlan(query, false, true);
             Assert.assertEquals(anyQuery, plan);
         }
@@ -151,7 +152,8 @@ public class AnyFieldQueryPlannerNoFieldExpansionTest extends AbstractFunctional
             String statePhrase = EQ_OP + "'" + state + "'";
             String contPhrase = EQ_OP + "'" + cont + "'";
             String query = Constants.ANY_FIELD + cityPhrase + AND_OP + Constants.ANY_FIELD + statePhrase + AND_OP + Constants.ANY_FIELD + contPhrase;
-            String anyQuery = Constants.ANY_FIELD + cityPhrase + " && " + Constants.ANY_FIELD + statePhrase.toLowerCase() + " && " + Constants.ANY_FIELD + contPhrase.toLowerCase();
+            String anyQuery = Constants.ANY_FIELD + cityPhrase + " && " + Constants.ANY_FIELD + statePhrase.toLowerCase() + " && " + Constants.ANY_FIELD
+                            + contPhrase.toLowerCase();
             String plan = getPlan(query, false, true);
             Assert.assertEquals(anyQuery, plan);
         }
@@ -221,7 +223,8 @@ public class AnyFieldQueryPlannerNoFieldExpansionTest extends AbstractFunctional
         String roPhrase = RE_OP + "'ro.*'";
         String oPhrase = RE_OP + "'.*o'";
         String query = Constants.ANY_FIELD + roPhrase + OR_OP + Constants.ANY_FIELD + oPhrase;
-        String expect = Constants.ANY_FIELD + EQ_OP + "'rome'" + " || " + Constants.ANY_FIELD + EQ_OP + "'lazio'" + " || " + Constants.ANY_FIELD + EQ_OP + "'ohio'";
+        String expect = Constants.ANY_FIELD + EQ_OP + "'rome'" + " || " + Constants.ANY_FIELD + EQ_OP + "'lazio'" + " || " + Constants.ANY_FIELD + EQ_OP
+                        + "'ohio'";
         String plan = getPlan(query, false, true);
         Assert.assertEquals(expect, plan);
     }
@@ -231,7 +234,8 @@ public class AnyFieldQueryPlannerNoFieldExpansionTest extends AbstractFunctional
         String roPhrase = RE_OP + "'ro.*'";
         String oPhrase = RE_OP + "'.*o'";
         String query = Constants.ANY_FIELD + roPhrase + AND_OP + Constants.ANY_FIELD + oPhrase;
-        String expect = Constants.ANY_FIELD + EQ_OP + "'rome'" + " && (" + Constants.ANY_FIELD + EQ_OP + "'lazio'" + " || " + Constants.ANY_FIELD + EQ_OP + "'ohio')";
+        String expect = Constants.ANY_FIELD + EQ_OP + "'rome'" + " && (" + Constants.ANY_FIELD + EQ_OP + "'lazio'" + " || " + Constants.ANY_FIELD + EQ_OP
+                        + "'ohio')";
         String plan = getPlan(query, false, true);
         Assert.assertEquals(expect, plan);
     }
@@ -241,7 +245,8 @@ public class AnyFieldQueryPlannerNoFieldExpansionTest extends AbstractFunctional
         String roPhrase = RE_OP + "'ro.*'";
         String oPhrase = RE_OP + "'.*o'";
         String query = Constants.ANY_FIELD + roPhrase + AND_OP + CityField.STATE.name() + oPhrase;
-        String expect = Constants.ANY_FIELD + EQ_OP + "'rome'" + " && (" + CityField.STATE.name() + EQ_OP + "'lazio'" + " || " + CityField.STATE.name() + EQ_OP + "'ohio')";
+        String expect = Constants.ANY_FIELD + EQ_OP + "'rome'" + " && (" + CityField.STATE.name() + EQ_OP + "'lazio'" + " || " + CityField.STATE.name() + EQ_OP
+                        + "'ohio')";
         String plan = getPlan(query, false, true);
         Assert.assertEquals(expect, plan);
     }
@@ -276,7 +281,7 @@ public class AnyFieldQueryPlannerNoFieldExpansionTest extends AbstractFunctional
         } catch (FullTableScansDisallowedException e) {
             // expected
         }
-
+        
         try {
             this.logic.setFullTableScanEnabled(true);
             String plan = getPlan(query, false, true);

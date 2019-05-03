@@ -82,12 +82,12 @@ public class JexlNodeFactory {
      * @return A new sub query
      */
     public static JexlNode createNodeTreeFromFieldsToValues(ContainerType containerType, JexlNode node, JexlNode orgNode, IndexLookupMap fieldsToValues,
-                                                            boolean expandFields, boolean expandValues) {
+                    boolean expandFields, boolean expandValues) {
         // do nothing if not expanding fields or values
         if (!expandFields && !expandValues) {
             return orgNode;
         }
-
+        
         // no expansions needed if the fieldname threshold is exceeded
         if (fieldsToValues.isKeyThresholdExceeded()) {
             return new ExceededTermThresholdMarkerJexlNode(orgNode);
@@ -102,17 +102,17 @@ public class JexlNodeFactory {
             fieldsToValues.clear();
             fieldsToValues.put(JexlASTHelper.getIdentifier(orgNode), allValues);
         }
-
+        
         Set<String> fields = fieldsToValues.keySet();
-
+        
         JexlNode parentNode = (containerType.equals(ContainerType.OR_NODE) ? new ASTOrNode(ParserTreeConstants.JJTORNODE) : new ASTAndNode(
                         ParserTreeConstants.JJTANDNODE));
         int parentNodeChildCount = 0;
-
+        
         JexlNodes.ensureCapacity(parentNode, fields.size());
         for (String field : fields) {
             ValueSet valuesForField = fieldsToValues.get(field);
-
+            
             // if not expanding values, then reuse the original node with simply a new field name
             if (!expandValues) {
                 ASTIdentifier identifier = new ASTIdentifier(ParserTreeConstants.JJTIDENTIFIER);
@@ -120,7 +120,7 @@ public class JexlNodeFactory {
                 JexlNode child = buildUntypedBinaryNode(orgNode, identifier, JexlASTHelper.getLiteral(orgNode));
                 parentNode.jjtAddChild(child, parentNodeChildCount);
                 child.jjtSetParent(parentNode);
-
+                
                 parentNodeChildCount++;
             }
             
@@ -168,7 +168,7 @@ public class JexlNodeFactory {
                     }
                 }
             }
-
+            
             // Don't create an OR if we have only one value, directly attach it
             else if (1 == valuesForField.size()) {
                 JexlNode child = buildUntypedNode(node, field, valuesForField.iterator().next());

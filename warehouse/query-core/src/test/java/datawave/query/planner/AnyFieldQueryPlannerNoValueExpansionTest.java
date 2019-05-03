@@ -27,9 +27,9 @@ import static datawave.query.testframework.RawDataManager.RE_OP;
 import static datawave.query.testframework.RawDataManager.RN_OP;
 
 public class AnyFieldQueryPlannerNoValueExpansionTest extends AbstractFunctionalQuery {
-
+    
     private static final Logger log = Logger.getLogger(AnyFieldQueryPlannerNoValueExpansionTest.class);
-
+    
     @BeforeClass
     public static void filterSetup() throws Exception {
         Collection<DataTypeHadoopConfig> dataTypes = new ArrayList<>();
@@ -37,11 +37,11 @@ public class AnyFieldQueryPlannerNoValueExpansionTest extends AbstractFunctional
         generic.addReverseIndexField(CityField.STATE.name());
         generic.addReverseIndexField(CityField.CONTINENT.name());
         dataTypes.add(new CitiesDataType(CityEntry.generic, generic));
-
+        
         final AccumuloSetupHelper helper = new AccumuloSetupHelper(dataTypes);
         connector = helper.loadTables(log);
     }
-
+    
     public AnyFieldQueryPlannerNoValueExpansionTest() {
         super(CitiesDataType.getManager());
     }
@@ -80,7 +80,7 @@ public class AnyFieldQueryPlannerNoValueExpansionTest extends AbstractFunctional
             } catch (FullTableScansDisallowedException e) {
                 // expected
             }
-
+            
             this.logic.setFullTableScanEnabled(true);
             try {
                 String plan = getPlan(query, true, false);
@@ -181,10 +181,10 @@ public class AnyFieldQueryPlannerNoValueExpansionTest extends AbstractFunctional
             String query = Constants.ANY_FIELD + cityPhrase + AND_OP + Constants.ANY_FIELD + statePhrase + AND_OP + Constants.ANY_FIELD + contPhrase;
             String anyQuery = CityField.CONTINENT.name() + contPhrase.toLowerCase() + " && ";
             if (city.name().equals("london")) {
-                anyQuery += "((" + CityField.STATE.name() + statePhrase.toLowerCase() +
-                        " && " + CityField.STATE.name() + cityPhrase + ") || ";
+                anyQuery += "((" + CityField.STATE.name() + statePhrase.toLowerCase() + " && " + CityField.STATE.name() + cityPhrase + ") || ";
             }
-            anyQuery += CityField.CITY.name() + '_' + CityField.STATE.name() + EQ_OP + "'" + city.name() + CompositeIngest.DEFAULT_SEPARATOR + state.toLowerCase() + "'";
+            anyQuery += CityField.CITY.name() + '_' + CityField.STATE.name() + EQ_OP + "'" + city.name() + CompositeIngest.DEFAULT_SEPARATOR
+                            + state.toLowerCase() + "'";
             if (city.name().equals("london")) {
                 anyQuery += ")";
             }
@@ -244,7 +244,7 @@ public class AnyFieldQueryPlannerNoValueExpansionTest extends AbstractFunctional
             Assert.assertEquals(expect, plan);
         }
     }
-
+    
     @Test(expected = DatawaveFatalQueryException.class)
     public void testRegexWithFIAndRI() throws Exception {
         String phrase = RE_OP + "'.*iss.*'";
